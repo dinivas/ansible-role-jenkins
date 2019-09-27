@@ -3,10 +3,11 @@ dependencies:
   - geerlingguy.java
 
 galaxy_info:
-  author: geerlingguy
+  author: geerlingguy, orachide
   description: Jenkins CI
   company: "Midwestern Mac, LLC"
   license: "license (BSD, MIT)"
+  role_name: jenkins
   min_ansible_version: 2.4
   platforms:
     - name: EL

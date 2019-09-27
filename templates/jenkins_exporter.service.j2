@@ -1,0 +1,14 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Jenkins exporter Service
+After=multi-user.target
+
+[Service]
+User={{ jenkins_process_user }}
+Group={{ jenkins_process_group }}
+Type=simple
+ExecStart=/usr/bin/python /usr/bin/jenkins_exporter.py -j http://localhost:8080 -p {{ jenkins_exporter_port | default(9118) }} --user {{ jenkins_admin_username }} --password {{ jenkins_admin_password }}
+
+[Install]
+WantedBy=multi-user.target

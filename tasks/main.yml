@@ -65,5 +65,5 @@
 # Update Jenkins and install configured plugins.
 - include_tasks: plugins.yml
 
-- include_tasks: jenkins_exporter.yml
+- include_tasks: jenkins-exporter.yml
   when: jenkins_install_prometheus_exporter

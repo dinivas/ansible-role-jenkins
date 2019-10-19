@@ -11,9 +11,9 @@
     mode: 0775
   register: jenkins_users_config
 
-- name: restart jenkins_exporter
+- name: restart jenkins-exporter
   systemd:
-    name: jenkins_exporter
+    name: jenkins-exporter
     state: restarted
     daemon_reload: yes
   become: true

@@ -1,0 +1,59 @@
+---
+# Install https://github.com/akawork/jenkins-exporter
+
+- name: Install yum repo for python 3.6
+  yum:
+    name: https://centos7.iuscommunity.org/ius-release.rpm
+    state: present
+
+- name: Install Python 3.6
+  yum:
+    name:
+      - python36u
+      - python36u-libs
+      - python36u-devel
+      - python36u-pip
+    state: present
+
+- name: Install python requirements
+  pip:
+    name: "{{ item }}"
+    executable: /usr/bin/pip3.6
+  with_items:
+    - prometheus-client==0.6.0
+    - requests==2.21.0
+- name: Ensure Jenkins-exporter directory exist
+  file:
+    path: /opt/jenkins-exporter
+    state: directory
+    mode: '0744'
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+- name: Download Jenkins exporter
+  unarchive:
+    src: https://github.com/orachide/jenkins-exporter/archive/v1.0.tar.gz
+    dest: /opt/jenkins-exporter
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+    mode: '0744'
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+  notify: restart jenkins-exporter
+- name: Create Jenkins exporter config file
+  template:
+    src: jenkins-exporter.config.ini.j2
+    dest: /opt/jenkins-exporter/config.ini
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+  notify: restart jenkins-exporter
+- name: Create Jenkins exporter service definition
+  template:
+    src: jenkins-exporter.service.j2
+    dest: /lib/systemd/system/jenkins-exporter.service
+  notify: restart jenkins-exporter
+- name: Start Jenkins Exporter service
+  service:
+    name: jenkins-exporter
+    enabled: yes
+    state: started
+  become: true

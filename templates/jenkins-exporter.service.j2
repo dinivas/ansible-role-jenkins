@@ -8,6 +8,10 @@ After=multi-user.target
 User={{ jenkins_process_user }}
 Group={{ jenkins_process_group }}
 Type=simple
+
+Restart=on-failure
+RestartSec=5s
+
 WorkingDirectory=/opt/jenkins-exporter
 ExecStart=/usr/bin/python3.6 /opt/jenkins-exporter/main.py
 
